@@ -36,7 +36,7 @@ public class SendMailTest {
 		// 2. 根据配置创建会话对象, 用于和邮件服务器交互
 		Session session = Session.getDefaultInstance(props);
 		session.setDebug(true);                                 // 设置为debug模式, 可以查看详细的发送 log
-
+		
 		// 3. 创建一封邮件
 		MimeMessage message = new MimeMessage(session);
 		try 
@@ -47,8 +47,8 @@ public class SendMailTest {
 			message.setContent("TEST这是邮件正文...", "text/html;charset=UTF-8");
 			message.setSentDate(new Date());
 			message.saveChanges();
-		
-		// 4. 根据 Session 获取邮件传输对象
+			
+			// 4. 根据 Session 获取邮件传输对象
 			Transport transport = session.getTransport();
 			transport.connect(USER, PWD);
 			transport.sendMessage(message, message.getAllRecipients());
