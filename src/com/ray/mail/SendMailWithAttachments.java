@@ -4,29 +4,32 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 /**
  * @author : ray
  * @date : 2017年5月4日
- * 使用javamail测试简单的邮件发送功能
  */
-public class SendMailTest {
+public class SendMailWithAttachments {
 
-	public static final String MAILSERVER = "*********";
+public static final String MAILSERVER = "*********";
 	
 	public static final String USER = "*********";
 	public static final String PWD = "*********";
 	
-	
-	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
 		// 1. 创建参数配置, 用于连接邮件服务器的参数配置
 		Properties props = new Properties();                    // 参数配置
         props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
@@ -45,7 +48,19 @@ public class SendMailTest {
 			message.setRecipient(RecipientType.TO, new InternetAddress(USER, "ray", "UTF-8"));
 			message.setSubject("测试邮件", "UTF-8");
 			message.setContent("TEST这是邮件正文...", "text/html;charset=UTF-8");
+			
+			MimeBodyPart attachment = new MimeBodyPart();
+			DataHandler dh2 = new DataHandler(new FileDataSource("C:\\Users\\persa\\Downloads\\test.txt"));  // 读取本地文件
+			attachment.setDataHandler(dh2);                                             // 将附件数据添加到“节点”
+			attachment.setFileName(MimeUtility.encodeText(dh2.getName()));              // 设置附件的文件名（需要编码）
+			
+			MimeMultipart mm = new MimeMultipart();
+			mm.addBodyPart(attachment);
+			mm.setSubType("mixed");
+			
+			message.setContent(mm);
 			message.setSentDate(new Date());
+			
 			message.saveChanges();
 			
 			// 4. 根据 Session 获取邮件传输对象
@@ -60,6 +75,7 @@ public class SendMailTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
+		
 	}
+
 }
