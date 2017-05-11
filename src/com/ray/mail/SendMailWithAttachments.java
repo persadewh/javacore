@@ -46,17 +46,26 @@ public static final String MAILSERVER = "*********";
 		{
 			message.setFrom(new InternetAddress(USER, "ray", "UTF-8"));
 			message.setRecipient(RecipientType.TO, new InternetAddress(USER, "ray", "UTF-8"));
+			message.setRecipient(RecipientType.CC, new InternetAddress(USER, "ray", "UTF-8"));
 			message.setSubject("测试邮件", "UTF-8");
-			message.setContent("TEST这是邮件正文...", "text/html;charset=UTF-8");
+			//message.setContent("TEST这是邮件正文...", "text/html;charset=UTF-8");
 			
 			MimeBodyPart attachment = new MimeBodyPart();
 			DataHandler dh2 = new DataHandler(new FileDataSource("C:\\Users\\persa\\Downloads\\test.txt"));  // 读取本地文件
 			attachment.setDataHandler(dh2);                                             // 将附件数据添加到“节点”
 			attachment.setFileName(MimeUtility.encodeText(dh2.getName()));              // 设置附件的文件名（需要编码）
 			
+			
 			MimeMultipart mm = new MimeMultipart();
-			mm.addBodyPart(attachment);
 			mm.setSubType("mixed");
+			
+			//body content
+			MimeBodyPart content = new MimeBodyPart();
+			content.setContent("TEST这是邮件正文...", "text/html;charset=UTF-8");
+			
+			mm.addBodyPart(content);
+			mm.addBodyPart(attachment);
+			
 			
 			message.setContent(mm);
 			message.setSentDate(new Date());
