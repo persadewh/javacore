@@ -8,6 +8,10 @@ import java.io.Serializable;
  */
 public class Product implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -669316538681108592L;
 	private String description;
 	private double price;
 	private Warehouse location;
